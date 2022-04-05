@@ -1,22 +1,23 @@
+import 'package:cricketapp/pages/teamView.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
-  
+
   @override
   _HomePageState createState() => _HomePageState();
 }
-  
+
 class _HomePageState extends State<HomePage> {
   int pageIndex = 0;
-  
+
   final pages = [
     const Page1(),
     const Page2(),
     const Page3(),
     const Page4(),
   ];
-  
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -41,7 +42,7 @@ class _HomePageState extends State<HomePage> {
       bottomNavigationBar: buildMyNavBar(context),
     );
   }
-  
+
   Container buildMyNavBar(BuildContext context) {
     return Container(
       height: 60,
@@ -115,6 +116,9 @@ class _HomePageState extends State<HomePage> {
           IconButton(
             enableFeedback: false,
             onPressed: () {
+              Navigator.of(context)
+                  .push(MaterialPageRoute(builder: (context) => TeamView()));
+
               setState(() {
                 pageIndex = 3;
               });
@@ -136,10 +140,10 @@ class _HomePageState extends State<HomePage> {
     );
   }
 }
-  
+
 class Page1 extends StatelessWidget {
   const Page1({Key? key}) : super(key: key);
-  
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -157,10 +161,10 @@ class Page1 extends StatelessWidget {
     );
   }
 }
-  
+
 class Page2 extends StatelessWidget {
   const Page2({Key? key}) : super(key: key);
-  
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -178,10 +182,10 @@ class Page2 extends StatelessWidget {
     );
   }
 }
-  
+
 class Page3 extends StatelessWidget {
   const Page3({Key? key}) : super(key: key);
-  
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -199,10 +203,10 @@ class Page3 extends StatelessWidget {
     );
   }
 }
-  
+
 class Page4 extends StatelessWidget {
   const Page4({Key? key}) : super(key: key);
-  
+
   @override
   Widget build(BuildContext context) {
     return Container(
