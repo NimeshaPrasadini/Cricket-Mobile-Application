@@ -1,5 +1,6 @@
 import 'package:cricketapp/pages/Admin/sheduleAdd.dart';
 import 'package:cricketapp/pages/Admin/teamAdd.dart';
+import 'package:cricketapp/pages/Sample.dart';
 
 import 'package:flutter/material.dart';
 
@@ -46,8 +47,9 @@ class _AdminMenuState extends State<AdminMenu> {
                 highlightedBorderColor: Colors.red,
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(15)),
-                onPressed: () {Navigator.of(context)
-                      .push(MaterialPageRoute(builder: (context) => SheduleAdd()));
+                onPressed: () {
+                  Navigator.of(context).push(
+                      MaterialPageRoute(builder: (context) => SheduleAdd()));
                 },
               ),
             ),
