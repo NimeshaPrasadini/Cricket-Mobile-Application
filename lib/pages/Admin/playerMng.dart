@@ -18,6 +18,8 @@ class PlayerMng extends StatefulWidget {
 class _PlayerMngState extends State<PlayerMng> {
   var fileName;
   var path;
+
+  var Collection = 'Players';
   final Storage storage = Storage();
   final TextEditingController _playernameController = TextEditingController();
   final TextEditingController _countryNameController = TextEditingController();
@@ -36,8 +38,85 @@ class _PlayerMngState extends State<PlayerMng> {
   final TextEditingController _TestRunsController = TextEditingController();
   final TextEditingController _TestAvgController = TextEditingController();
   final TextEditingController _TestSRController = TextEditingController();
+  final TextEditingController _countryDesController = TextEditingController();
+  final CollectionReference _teamss =
+      FirebaseFirestore.instance.collection('teams');
   final CollectionReference _playerss =
       FirebaseFirestore.instance.collection('players');
+
+  Future<void> _createOrUpdateDetail(
+      [DocumentSnapshot? documentSnapshot1]) async {
+    String action = 'create';
+    if (documentSnapshot1 != null) {
+      action = 'update';
+
+      _countryDesController.text = documentSnapshot1['Detail'].toString();
+    }
+
+    await showModalBottomSheet(
+        isScrollControlled: true,
+        context: context,
+        builder: (BuildContext ctx) {
+          return Padding(
+            padding: EdgeInsets.only(
+                top: 20,
+                left: 20,
+                right: 20,
+                // prevent the soft keyboard from covering text fields
+                bottom: MediaQuery.of(ctx).viewInsets.bottom + 20),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                TextField(
+                  controller: _countryDesController,
+                  decoration: const InputDecoration(labelText: 'Details'),
+                ),
+                /* TextField(
+                  keyboardType:
+                      const TextInputType.numberWithOptions(decimal: true),
+                  controller: _priceController,
+                  decoration: const InputDecoration(
+                    labelText: 'Price',
+                  ),
+                ),*/
+                const SizedBox(
+                  height: 20,
+                ),
+                ElevatedButton(
+                  child: Text(action == 'create' ? 'Create' : 'Update'),
+                  onPressed: () async {
+                    final String? countryDes = _countryDesController.text;
+                    // final double? price =
+                    //  double.tryParse(_priceController.text);
+                    if (countryDes != null) {
+                      if (action == 'create') {
+                        // Persist a new product to Firestore
+                        await _teamss.add({"Detail": countryDes});
+                      }
+
+                      if (action == 'update') {
+                        // Update the product
+                        await _teamss
+                            .doc(documentSnapshot1!.id)
+                            .update({"Detail": countryDes});
+                      }
+
+                      // Clear the text fields
+
+                      _countryDesController.text = '';
+                      // _priceController.text = '';
+
+                      // Hide the bottom sheet
+                      Navigator.of(context).pop();
+                    }
+                  },
+                )
+              ],
+            ),
+          );
+        });
+  }
 
   Future<void> _createOrUpdate([DocumentSnapshot? documentSnapshot2]) async {
     String action = 'create';
@@ -493,80 +572,172 @@ class _PlayerMngState extends State<PlayerMng> {
       ),
 
       // Using StreamBuilder to display all products from Firestore in real-time
-      body: StreamBuilder(
-        stream: _playerss
-            .where('countryName', isEqualTo: widget.name.data)
-            .snapshots(),
-        builder: (context, AsyncSnapshot<QuerySnapshot> streamSnapshot) {
-          if (streamSnapshot.hasData) {
-            return ListView.builder(
-              itemCount: streamSnapshot.data!.docs.length,
-              itemBuilder: (context, index) {
-                final DocumentSnapshot documentSnapshot2 =
-                    streamSnapshot.data!.docs[index];
-                final Text plname = Text(documentSnapshot2['PlayerName']);
-                final Text img = Text(documentSnapshot2['Image']);
-                return Card(
-                    elevation: 7,
-                    child: Column(
-                      children: [
-                        FutureBuilder(
-                            future: storage.downloadURL(img.data.toString()),
-                            builder: (BuildContext context,
-                                AsyncSnapshot<String> snapshot) {
-                              if (snapshot.connectionState ==
-                                      ConnectionState.done &&
-                                  snapshot.hasData) {
-                                return Container(
-                                    width: 100,
-                                    height: 100,
-                                    //padding: EdgeInsets.only(bottom: 5),
-                                    child: Image.network(
-                                      snapshot.data!,
-                                      fit: BoxFit.cover,
-                                    ));
-                              }
+      body: SingleChildScrollView(
+          scrollDirection: Axis.vertical,
+          child: Column(
+            children: [
+              StreamBuilder(
+                stream: _teamss
+                    .where('countryName', isEqualTo: widget.name.data)
+                    .snapshots(),
+                builder:
+                    (context, AsyncSnapshot<QuerySnapshot> streamSnapshot) {
+                  if (streamSnapshot.hasData) {
+                    return ListView.builder(
+                        scrollDirection: Axis.vertical,
+                        shrinkWrap: true,
+                        itemCount: streamSnapshot.data!.docs.length,
+                        itemBuilder: (context, index) {
+                          final DocumentSnapshot documentSnapshot1 =
+                              streamSnapshot.data!.docs[index];
+                          final Text Countryimg =
+                              Text(documentSnapshot1['img']);
+                          final Text Countrydes =
+                              Text(documentSnapshot1['Detail']);
+                          var Collection = 'Teams';
+                          return Column(children: [
+                            Card(
+                              child: Column(children: [
+                                FutureBuilder(
+                                    future: storage.downloadURL(
+                                        Countryimg.data.toString()),
+                                    builder: (BuildContext context,
+                                        AsyncSnapshot<String> snapshot) {
+                                      if (snapshot.connectionState ==
+                                              ConnectionState.done &&
+                                          snapshot.hasData) {
+                                        return Container(
+                                            width: 180,
+                                            height: 150,
+                                            //padding: EdgeInsets.only(bottom: 5),
+                                            child: Image.network(
+                                              snapshot.data!,
+                                              fit: BoxFit.cover,
+                                            ));
+                                      }
 
-                              return Container();
-                            }),
-                        // margin: const EdgeInsets.all(10),
-                        ListTile(
-                          onTap: () {
-                            Navigator.of(context).push(MaterialPageRoute(
-                                builder: (context) => PlayerInfo(plname)));
-                          },
-                          title: plname,
-                          subtitle: Text(documentSnapshot2['type']),
-                          trailing: SizedBox(
-                            width: 100,
-                            child: Row(
-                              children: [
-                                // Press this button to edit a single product
-                                IconButton(
-                                    icon: const Icon(Icons.edit),
-                                    onPressed: () =>
-                                        _createOrUpdate(documentSnapshot2)),
-                                // This icon button is used to delete a single product
-                                IconButton(
-                                    icon: const Icon(Icons.delete),
-                                    onPressed: () =>
-                                        _deletePlayer(documentSnapshot2.id)),
-                              ],
+                                      return Container();
+                                    }),
+                                Card(
+                                  elevation: 7,
+                                  margin: const EdgeInsets.all(10),
+                                  child: ListTile(
+                                    title: Text(documentSnapshot1['Detail']),
+                                    trailing: SizedBox(
+                                      width: 70,
+                                      child: Row(
+                                        children: [
+                                          // Press this button to edit a single product
+                                          IconButton(
+                                              icon: const Icon(Icons.edit),
+                                              onPressed: () =>
+                                                  _createOrUpdateDetail(
+                                                      documentSnapshot1)),
+                                          // This icon button is used to delete a single product
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ]),
                             ),
-                          ),
-                        ),
-                      ],
-                    ));
-              },
-            );
-          }
+                          ]);
+                        });
+                  }
+                  return const Text('ok');
+                },
+              ),
+              ListTile(
+                title: Text('Team Players'),
+              ),
+              StreamBuilder(
+                stream: _playerss
+                    .where('countryName', isEqualTo: widget.name.data)
+                    .snapshots(),
+                builder:
+                    (context, AsyncSnapshot<QuerySnapshot> streamSnapshot) {
+                  if (streamSnapshot.hasData) {
+                    return ListView.builder(
+                      scrollDirection: Axis.vertical,
+                      shrinkWrap: true,
+                      itemCount: streamSnapshot.data!.docs.length,
+                      itemBuilder: (context, index) {
+                        final DocumentSnapshot documentSnapshot2 =
+                            streamSnapshot.data!.docs[index];
+                        final Text plname =
+                            Text(documentSnapshot2['PlayerName']);
+                        final Text img = Text(documentSnapshot2['Image']);
+                        return Column(
+                          children: [
+                            Card(
+                                elevation: 7,
+                                child: Column(
+                                  children: [
+                                    FutureBuilder(
+                                        future: storage
+                                            .downloadURL(img.data.toString()),
+                                        builder: (BuildContext context,
+                                            AsyncSnapshot<String> snapshot) {
+                                          if (snapshot.connectionState ==
+                                                  ConnectionState.done &&
+                                              snapshot.hasData) {
+                                            return Container(
+                                                width: 100,
+                                                height: 100,
+                                                //padding: EdgeInsets.only(bottom: 5),
+                                                child: Image.network(
+                                                  snapshot.data!,
+                                                  fit: BoxFit.cover,
+                                                ));
+                                          }
 
-          return const Center(
-            child: CircularProgressIndicator(),
-          );
-        },
-      ),
+                                          return Container();
+                                        }),
+                                    // margin: const EdgeInsets.all(10),
+                                    ListTile(
+                                      onTap: () {
+                                        Navigator.of(context).push(
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    PlayerInfo(plname)));
+                                      },
+                                      title: plname,
+                                      subtitle: Text(documentSnapshot2['type']),
+                                      trailing: SizedBox(
+                                        width: 100,
+                                        child: Row(
+                                          children: [
+                                            // Press this button to edit a single product
+                                            IconButton(
+                                                icon: const Icon(Icons.edit),
+                                                onPressed: () =>
+                                                    _createOrUpdate(
+                                                        documentSnapshot2)),
+                                            // This icon button is used to delete a single product
+                                            IconButton(
+                                                icon: const Icon(Icons.delete),
+                                                onPressed: () => _deletePlayer(
+                                                    documentSnapshot2.id)),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ))
+                          ],
+                        );
+                        return const Text('ok');
+                      },
+                    );
+                  }
 
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+                },
+              ),
+            ],
+          )),
       // Add new product
       floatingActionButton: FloatingActionButton(
         onPressed: () => _createOrUpdate(),
