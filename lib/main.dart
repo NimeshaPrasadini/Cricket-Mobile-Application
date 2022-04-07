@@ -1,7 +1,13 @@
+//import 'dart:ui';
+import 'dart:async';
+import 'package:cricketapp/pages/authentication.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+
 import 'package:cricketapp/pages/home.dart';
 import 'package:cricketapp/homescreen/dash_screen.dart';
+import 'package:splashscreen/splashscreen.dart';
+
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -16,12 +22,37 @@ class CricketApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Cricket App',
+      title: 'Cric Info',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primaryColor: const Color(0xff0000FF),
+        visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: const HomePage(),
+      home: Splash1(),
+
+    );
+  }
+}
+
+class Splash1 extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return SplashScreen(
+      seconds: 5,
+      navigateAfterSeconds: const Authentication(),
+      title: new Text(
+        'Cric Info',
+        textAlign: TextAlign.center,
+        style: new TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 20.0,
+            color: Colors.yellowAccent),
+      ),
+      image: new Image.asset('assets/cricket_logo01.png'),
+      photoSize: 100.0,
+      backgroundColor: Color(0xff0000FF),
+      styleTextUnderTheLoader: new TextStyle(),
+      loaderColor: Colors.white,
     );
   }
 }

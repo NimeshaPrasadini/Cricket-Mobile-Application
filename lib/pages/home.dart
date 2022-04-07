@@ -1,4 +1,10 @@
+import 'package:cricketapp/pages/Admin/sheduleMenuAdmin.dart';
+import 'package:cricketapp/pages/Sample.dart';
+import 'package:cricketapp/pages/shedule.dart';
+import 'package:cricketapp/pages/sheduleMenu.dart';
 import 'package:cricketapp/pages/teamView.dart';
+import 'package:cricketapp/pages/commentView.dart';
+import 'package:cricketapp/pages/newsView.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatefulWidget {
@@ -16,19 +22,21 @@ class _HomePageState extends State<HomePage> {
     const Page2(),
     const Page3(),
     const Page4(),
+    const Page5(),
   ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
+
       appBar: AppBar(
         leading: const Icon(
           Icons.menu,
           color: Colors.white,
         ),
         title: const Text(
-          "Cricket App",
+          "Cric Info",
           style: TextStyle(
             color: Colors.white,
             fontSize: 25,
@@ -38,6 +46,7 @@ class _HomePageState extends State<HomePage> {
         centerTitle: true,
         backgroundColor: Theme.of(context).primaryColor,
       ),
+
       body: pages[pageIndex],
       bottomNavigationBar: buildMyNavBar(context),
     );
@@ -47,7 +56,7 @@ class _HomePageState extends State<HomePage> {
     return Container(
       height: 60,
       decoration: BoxDecoration(
-        color: Theme.of(context).primaryColor,
+        color: Color.fromARGB(255, 110, 163, 255),
         borderRadius: const BorderRadius.only(
           topLeft: Radius.circular(20),
           topRight: Radius.circular(20),
@@ -84,12 +93,17 @@ class _HomePageState extends State<HomePage> {
             },
             icon: pageIndex == 1
                 ? const Icon(
-                    Icons.work_rounded,
+
+                    Icons.flag_outlined,
+
                     color: Colors.white,
                     size: 35,
                   )
                 : const Icon(
-                    Icons.work_outline_outlined,
+
+
+                    Icons.sports_cricket_outlined,
+
                     color: Colors.white,
                     size: 35,
                   ),
@@ -122,12 +136,31 @@ class _HomePageState extends State<HomePage> {
             },
             icon: pageIndex == 3
                 ? const Icon(
-                    Icons.person,
+                    Icons.schedule,
                     color: Colors.white,
                     size: 35,
                   )
                 : const Icon(
-                    Icons.person_outline,
+                    Icons.schedule_outlined,
+                    color: Colors.white,
+                    size: 35,
+                  ),
+          ),
+          IconButton(
+            enableFeedback: false,
+            onPressed: () {
+              setState(() {
+                pageIndex = 4;
+              });
+            },
+            icon: pageIndex == 4
+                ? const Icon(
+                    Icons.comment_rounded,
+                    color: Colors.white,
+                    size: 35,
+                  )
+                : const Icon(
+                    Icons.comment_outlined,
                     color: Colors.white,
                     size: 35,
                   ),
@@ -141,22 +174,12 @@ class _HomePageState extends State<HomePage> {
 class Page1 extends StatelessWidget {
   const Page1({Key? key}) : super(key: key);
 
-  @override
+ @override
   Widget build(BuildContext context) {
-    return Container(
-      color: Colors.white,
-      child: Center(
-        child: Text(
-          "Page Number 1",
-          style: TextStyle(
-            color: Colors.blue[900],
-            fontSize: 45,
-            fontWeight: FontWeight.w500,
-          ),
-        ),
-      ),
-    );
+    return NewsView();
+    
   }
+
 }
 
 class Page2 extends StatelessWidget {
@@ -173,19 +196,7 @@ class Page3 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: Colors.white,
-      child: Center(
-        child: Text(
-          "Page Number 3",
-          style: TextStyle(
-            color: Colors.blue[900],
-            fontSize: 45,
-            fontWeight: FontWeight.w500,
-          ),
-        ),
-      ),
-    );
+    return SheduleMenu();
   }
 }
 
@@ -194,6 +205,15 @@ class Page4 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return MyHomePage();
+  }
+}
+
+class Page5 extends StatelessWidget {
+  const Page5({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return CommentView();
   }
 }

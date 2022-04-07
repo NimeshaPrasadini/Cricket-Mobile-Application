@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
-import '../../model/homelist.dart';
-import '../design/app_theme.dart';
+import '../model/homelist.dart';
+import 'design/app_theme.dart';
 
-class AdminMenu extends StatefulWidget {
-  const AdminMenu({Key? key}) : super(key: key);
+class MyHomePage extends StatefulWidget {
+  const MyHomePage({Key? key}) : super(key: key);
 
   @override
   _MyHomePageState createState() => _MyHomePageState();
 }
 
-class _MyHomePageState extends State<AdminMenu> with TickerProviderStateMixin {
+class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
   List<HomeList> homeList = HomeList.homeList;
   AnimationController? animationController;
   bool multiple = true;
@@ -130,7 +130,7 @@ class _MyHomePageState extends State<AdminMenu> with TickerProviderStateMixin {
               child: Padding(
                 padding: const EdgeInsets.only(top: 4),
                 child: Text(
-                  'Cric Info Admin',
+                  'Cric Info',
                   style: TextStyle(
                     fontSize: 22,
                     color: AppTheme.darkText,

@@ -13,6 +13,7 @@ class PlayerInfo extends StatefulWidget {
 class _PlayerInfoState extends State<PlayerInfo> {
   var fileName;
   var path;
+  var Collection = 'Players';
   final Storage storage = Storage();
   final TextEditingController _playernameController = TextEditingController();
   final TextEditingController _ODIController = TextEditingController();
