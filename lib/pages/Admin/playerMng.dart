@@ -192,6 +192,7 @@ class _PlayerMngState extends State<PlayerMng> {
                       fileName = results.files.single.name;
 
                       _ImageController.text = fileName.toString();
+                      // _countryNameController.text = widget.name.data.toString();
                     },
                     child: const Icon(Icons.camera_alt)),
                 TextField(
@@ -236,10 +237,14 @@ class _PlayerMngState extends State<PlayerMng> {
                         child: Text(action == 'create' ? 'Create' : 'Update'),
                         onPressed: () async {
                           final String? PlayerName = _playernameController.text;
+
                           final String? countryName =
                               _countryNameController.text;
+                          _countryNameController.text =
+                              widget.name.data.toString();
                           final String? type = _typeController.text;
                           _ImageController.text = fileName.toString();
+
                           final String? Img = _ImageController.text;
                           final String? Des = _DesController.text;
                           final String? ODI = _ODIController.text;
