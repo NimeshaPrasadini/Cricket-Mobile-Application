@@ -1,3 +1,5 @@
+import 'package:cricketapp/pages/home.dart';
+import 'package:cricketapp/service/flutterfire.dart';
 import 'package:flutter/material.dart';
 
 class Authentication extends StatefulWidget {
@@ -19,7 +21,7 @@ class _AuthenticationState extends State<Authentication> {
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height,
         decoration: BoxDecoration(
-          color: Colors.blueAccent,
+          color: Color(0xff0000FF),
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -51,6 +53,7 @@ class _AuthenticationState extends State<Authentication> {
                 ),
               ),
             ),
+            SizedBox(height: 40),
             Container(
               width: MediaQuery.of(context).size.width / 1.4,
               height: 45,
@@ -59,22 +62,22 @@ class _AuthenticationState extends State<Authentication> {
                 color: Colors.white,
               ),
               child: MaterialButton(
-                onPressed: () {
-                  //async
-                  // bool shouldNavigate =
-                  //     await register(_emailField.text, _passwordField.text);
-                  // if (shouldNavigate) {
-                  //   Navigator.push(
-                  //     context,
-                  //     MaterialPageRoute(
-                  //       builder: (context) => HomeView(),
-                  //     ),
-                  //   );
-                  // }
-                },
+                onPressed: () async {
+                    bool shouldNavigate =
+                        await register(_emailField.text, _passwordField.text);
+                    if (shouldNavigate) {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => HomePage(),
+                        ),
+                      );
+                    }
+                  },
                 child: Text("Register"),
               ),
             ),
+            SizedBox(height: 20),
             Container(
               width: MediaQuery.of(context).size.width / 1.4,
               height: 45,
@@ -83,18 +86,17 @@ class _AuthenticationState extends State<Authentication> {
                 color: Colors.white,
               ),
               child: MaterialButton(
-                  onPressed: () {
-                    //async
-                    // bool shouldNavigate =
-                    //     await signIn(_emailField.text, _passwordField.text);
-                    // if (shouldNavigate) {
-                    //   Navigator.push(
-                    //     context,
-                    //     MaterialPageRoute(
-                    //       builder: (context) => HomeView(),
-                    //     ),
-                    //   );
-                    // }
+                  onPressed: () async {
+                    bool shouldNavigate =
+                        await signIn(_emailField.text, _passwordField.text);
+                    if (shouldNavigate) {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => HomePage(),
+                        ),
+                      );
+                    }
                   },
                   child: Text("Login"),
               ),
