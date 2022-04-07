@@ -1,7 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cricketapp/pages/Admin/MatchEdit.dart';
 import 'package:cricketapp/pages/Admin/playerMng.dart';
 import 'package:date_format/date_format.dart';
 import 'package:flutter/material.dart';
+import 'package:dropdown_button2/dropdown_button2.dart';
 
 import '../../service/storage_service.dart';
 
@@ -16,6 +18,24 @@ class _SheduleAdd extends State<SheduleAdd> {
   var Collection = 'Teams';
   var Country1 = Text('aa');
   var Country2 = Text('bb');
+  String selectedValue = 'Upcoming';
+  List<String> items = [
+    'Upcoming',
+    'Finished',
+  ];
+
+  String? selectedCountry1;
+  String? selectedCountry2;
+  List<String> countries = [
+    'Sri Lanka',
+    'India',
+    'Australia',
+    'Newzeland',
+    'England',
+    'SouthAfrica',
+    'Bangladesh',
+    'Pakistan'
+  ];
   final Storage storage = Storage();
   TimeOfDay selectedTime = TimeOfDay.now();
   // text fields' controllers
@@ -24,6 +44,13 @@ class _SheduleAdd extends State<SheduleAdd> {
   final TextEditingController _dateController = TextEditingController();
   final TextEditingController _timeController = TextEditingController();
   final TextEditingController _venueController = TextEditingController();
+  final TextEditingController _statusController = TextEditingController();
+
+  final TextEditingController _resultController = TextEditingController();
+  final TextEditingController _country1ScoreController =
+      TextEditingController();
+  final TextEditingController _country2ScoreController =
+      TextEditingController();
 
   final CollectionReference _sheduless =
       FirebaseFirestore.instance.collection('shedules');
@@ -56,6 +83,103 @@ class _SheduleAdd extends State<SheduleAdd> {
     }
   }
 
+  Future<void> _createOrUpdate([DocumentSnapshot? documentSnapshot2]) async {
+    await showModalBottomSheet(
+        isScrollControlled: true,
+        context: context,
+        builder: (BuildContext ctx) {
+          return Padding(
+            padding: EdgeInsets.only(
+                top: 20,
+                left: 20,
+                right: 20,
+                // prevent the soft keyboard from covering text fields
+                bottom: MediaQuery.of(ctx).viewInsets.bottom + 20),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      width: 100,
+                      child: TextField(
+                        controller: _statusController,
+                        decoration: const InputDecoration(labelText: 'Status'),
+                      ),
+                    ),
+                    DropdownButtonHideUnderline(
+                      child: DropdownButton2(
+                        itemPadding:
+                            EdgeInsetsDirectional.fromSTEB(10, 0, 0, 0),
+                        hint: Text(
+                          'Select Status',
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: Theme.of(context).hintColor,
+                          ),
+                        ),
+                        items: items
+                            .map((item) => DropdownMenuItem<String>(
+                                  value: item,
+                                  child: Text(
+                                    item,
+                                    style: const TextStyle(
+                                      fontSize: 14,
+                                    ),
+                                  ),
+                                ))
+                            .toList(),
+                        value: selectedValue,
+                        onChanged: (value) {
+                          setState(() {
+                            selectedValue = value as String;
+                            _statusController.text = selectedValue.toString();
+                          });
+                        },
+                        buttonHeight: 40,
+                        buttonWidth: 140,
+                        itemHeight: 40,
+                      ),
+                    ),
+                  ],
+                ),
+                TextField(
+                  controller: _resultController,
+                  decoration: const InputDecoration(
+                    labelText: 'Result',
+                  ),
+                ),
+                TextField(
+                  controller: _country1ScoreController,
+                  decoration: const InputDecoration(
+                    labelText: 'Team 1 Score',
+                  ),
+                ),
+                TextField(
+                  controller: _country2ScoreController,
+                  decoration: const InputDecoration(
+                    labelText: 'Team 2 Score',
+                  ),
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                Row(
+                  children: [
+                    ElevatedButton(
+                        onPressed: () => Navigator.of(context).pop(),
+                        child: const Text('Back')),
+                  ],
+                )
+              ],
+            ),
+          );
+        });
+  }
+
   Future<void> _createOrUpdateShedule(
       [DocumentSnapshot? documentSnapshot4]) async {
     String action = 'create';
@@ -66,6 +190,11 @@ class _SheduleAdd extends State<SheduleAdd> {
       _dateController.text = documentSnapshot4['date'];
       _timeController.text = documentSnapshot4['time'];
       _venueController.text = documentSnapshot4['venue'];
+
+      _statusController.text = documentSnapshot4['status'];
+      _resultController.text = documentSnapshot4['result'];
+      _country1ScoreController.text = documentSnapshot4['country1Score'];
+      _country2ScoreController.text = documentSnapshot4['country2Score'];
     }
 
     await showModalBottomSheet(
@@ -83,13 +212,103 @@ class _SheduleAdd extends State<SheduleAdd> {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                TextField(
-                  controller: _country1Controller,
-                  decoration: const InputDecoration(labelText: 'Country 1'),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      width: 100,
+                      child: TextField(
+                        controller: _country1Controller,
+                        decoration:
+                            const InputDecoration(labelText: 'Country 1'),
+                      ),
+                    ),
+                    DropdownButtonHideUnderline(
+                      child: DropdownButton2(
+                        itemPadding:
+                            EdgeInsetsDirectional.fromSTEB(10, 0, 0, 0),
+                        hint: Text(
+                          'Select Country',
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: Theme.of(context).hintColor,
+                          ),
+                        ),
+                        items: countries
+                            .map((item) => DropdownMenuItem<String>(
+                                  value: item,
+                                  child: Text(
+                                    item,
+                                    style: const TextStyle(
+                                      fontSize: 14,
+                                    ),
+                                  ),
+                                ))
+                            .toList(),
+                        value: selectedCountry1,
+                        onChanged: (value) {
+                          setState(() {
+                            selectedCountry1 = value as String;
+                            _country1Controller.text =
+                                selectedCountry1.toString();
+                          });
+                        },
+                        buttonHeight: 40,
+                        buttonWidth: 140,
+                        itemHeight: 40,
+                      ),
+                    ),
+                  ],
                 ),
-                TextField(
-                  controller: _country2Controller,
-                  decoration: const InputDecoration(labelText: 'Country 2'),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      width: 100,
+                      child: TextField(
+                        controller: _country2Controller,
+                        decoration:
+                            const InputDecoration(labelText: 'Country 2'),
+                      ),
+                    ),
+                    DropdownButtonHideUnderline(
+                      child: DropdownButton2(
+                        itemPadding:
+                            EdgeInsetsDirectional.fromSTEB(10, 0, 0, 0),
+                        hint: Text(
+                          'Select Country',
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: Theme.of(context).hintColor,
+                          ),
+                        ),
+                        items: countries
+                            .map((item) => DropdownMenuItem<String>(
+                                  value: item,
+                                  child: Text(
+                                    item,
+                                    style: const TextStyle(
+                                      fontSize: 14,
+                                    ),
+                                  ),
+                                ))
+                            .toList(),
+                        value: selectedCountry2,
+                        onChanged: (value) {
+                          setState(() {
+                            selectedCountry2 = value as String;
+                            _country2Controller.text =
+                                selectedCountry2.toString();
+                          });
+                        },
+                        buttonHeight: 40,
+                        buttonWidth: 140,
+                        itemHeight: 40,
+                      ),
+                    ),
+                  ],
                 ),
                 IconButton(
                     onPressed: () {
@@ -135,6 +354,11 @@ class _SheduleAdd extends State<SheduleAdd> {
                 const SizedBox(
                   height: 20,
                 ),
+                Row(children: [
+                  ElevatedButton(
+                      onPressed: () => _createOrUpdate(),
+                      child: const Text('Result')),
+                ]),
                 ElevatedButton(
                   child: Text(action == 'create' ? 'Create' : 'Update'),
                   onPressed: () async {
@@ -145,6 +369,11 @@ class _SheduleAdd extends State<SheduleAdd> {
                     final String? date = _dateController.text;
                     final String? time = _timeController.text;
                     final String? venue = _venueController.text;
+                    final String? status = _statusController.text;
+                    final String? result = _resultController.text;
+                    final String? cn1Score = _country1ScoreController.text;
+                    final String? cn2Score = _country2ScoreController.text;
+
                     // final double? price =
                     //  double.tryParse(_priceController.text);
                     if (country1 != null) {
@@ -155,7 +384,11 @@ class _SheduleAdd extends State<SheduleAdd> {
                           "country2": country2,
                           "date": date,
                           "time": time,
-                          "venue": venue
+                          "venue": venue,
+                          "status": status,
+                          "result": result,
+                          "country1Score": cn1Score,
+                          "country2Score": cn2Score
                         });
                       }
 
@@ -166,7 +399,11 @@ class _SheduleAdd extends State<SheduleAdd> {
                           "country2": country2,
                           "date": date,
                           "time": time,
-                          "venue": venue
+                          "venue": venue,
+                          "status": status,
+                          "result": result,
+                          "country1Score": cn1Score,
+                          "country2Score": cn2Score
                         });
                       }
 
@@ -176,7 +413,10 @@ class _SheduleAdd extends State<SheduleAdd> {
                       _dateController.text = '';
                       _timeController.text = '';
                       _venueController.text = '';
-                      // _priceController.text = '';
+                      _statusController.text = '';
+                      _resultController.text = '';
+                      _country1ScoreController.text = '';
+                      _country2ScoreController.text = '';
 
                       // Hide the bottom sheet
                       Navigator.of(context).pop();
@@ -207,7 +447,7 @@ class _SheduleAdd extends State<SheduleAdd> {
       // Using StreamBuilder to display all products from Firestore in real-time
       body: SafeArea(
         child: StreamBuilder(
-          stream: _sheduless.snapshots(),
+          stream: _sheduless.where('status', isEqualTo: '').snapshots(),
           builder: (context, AsyncSnapshot<QuerySnapshot> streamSnapshot) {
             if (streamSnapshot.hasData) {
               return ListView.builder(
@@ -221,6 +461,7 @@ class _SheduleAdd extends State<SheduleAdd> {
                   Country2 = cn2;
                   final Text date = Text(documentSnapshot4['date']);
                   final Text vn = Text(documentSnapshot4['venue']);
+                  final Text match = Text(documentSnapshot4['time']);
                   return GestureDetector(
                     /*
                     onTap: () => FocusScope.of(context).unfocus(),
@@ -306,10 +547,14 @@ class _SheduleAdd extends State<SheduleAdd> {
                       ),
                     ),
                     */
-                    onTap: () => FocusScope.of(context).unfocus(),
+                    onTap: () {
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => MatchEdit(match)));
+                    },
+                    //onTap: () => FocusScope.of(context).unfocus(),
                     child: Container(
                       width: 420,
-                      height: 150,
+                      height: 170,
                       padding: const EdgeInsets.symmetric(vertical: 20),
                       decoration: BoxDecoration(
                         color: Colors.white,
@@ -343,30 +588,45 @@ class _SheduleAdd extends State<SheduleAdd> {
                                     if (!streamSnapshot.hasData) {
                                       return const Text("Loading");
                                     }
-                                    var userDocument = streamSnapshot.data;
-                                    final DocumentSnapshot documentSnapshot1 =
-                                        streamSnapshot.data!.docs[index];
-                                    final Text Countryimg =
-                                        Text(documentSnapshot1['img']);
-                                    return FutureBuilder(
-                                        future: storage.downloadURL(
-                                            Countryimg.data.toString()),
-                                        builder: (BuildContext context,
-                                            AsyncSnapshot<String> snapshot) {
-                                          if (snapshot.connectionState ==
-                                                  ConnectionState.done &&
-                                              snapshot.hasData) {
-                                            //padding: EdgeInsets.only(bottom: 5),
-                                            return Image.network(
-                                              snapshot.data!,
-                                              width: 140,
-                                              height: 100,
-                                              fit: BoxFit.cover,
-                                            );
-                                          }
+                                    return Container(
+                                        width: 140,
+                                        height: 100,
+                                        child: ListView.builder(
 
-                                          return Container();
-                                        });
+                                            //var userDocument = streamSnapshot.data;
+                                            itemCount: streamSnapshot
+                                                .data!.docs.length,
+                                            itemBuilder: (context, index) {
+                                              final DocumentSnapshot
+                                                  documentSnapshot1 =
+                                                  streamSnapshot
+                                                      .data!.docs[index];
+                                              final Text Countryimg = Text(
+                                                  documentSnapshot1['img']);
+                                              return FutureBuilder(
+                                                  future: storage.downloadURL(
+                                                      Countryimg.data
+                                                          .toString()),
+                                                  builder:
+                                                      (BuildContext context,
+                                                          AsyncSnapshot<String>
+                                                              snapshot) {
+                                                    if (snapshot.connectionState ==
+                                                            ConnectionState
+                                                                .done &&
+                                                        snapshot.hasData) {
+                                                      //padding: EdgeInsets.only(bottom: 5),
+                                                      return Image.network(
+                                                        snapshot.data!,
+                                                        width: 140,
+                                                        height: 100,
+                                                        fit: BoxFit.cover,
+                                                      );
+                                                    }
+
+                                                    return Container();
+                                                  });
+                                            }));
                                   })),
                           const Spacer(
                             flex: 1,
@@ -384,7 +644,7 @@ class _SheduleAdd extends State<SheduleAdd> {
                                     Padding(
                                       padding:
                                           const EdgeInsetsDirectional.fromSTEB(
-                                              40, 0, 0, 0),
+                                              0, 0, 0, 0),
                                       child: Text(documentSnapshot4['venue']),
                                     ),
                                   ],
@@ -414,12 +674,17 @@ class _SheduleAdd extends State<SheduleAdd> {
                                               0, 0, 0, 0),
                                       child: Text(documentSnapshot4['date']),
                                     ),
-
-                                    /* Padding(
-                                      padding: EdgeInsetsDirectional.fromSTEB(
-                                          0, 3, 0, 0),
-                                      child: Text(documentSnapshot4['date']),
-                                    ),*/
+                                  ],
+                                ),
+                                Row(
+                                  mainAxisSize: MainAxisSize.max,
+                                  children: [
+                                    Padding(
+                                      padding:
+                                          const EdgeInsetsDirectional.fromSTEB(
+                                              40, 6, 0, 0),
+                                      child: Text(documentSnapshot4['time']),
+                                    ),
                                   ],
                                 ),
                                 Row(
@@ -463,36 +728,48 @@ class _SheduleAdd extends State<SheduleAdd> {
                                     if (!streamSnapshot.hasData) {
                                       return new Text("Loading");
                                     }
-                                    var userDocument = streamSnapshot.data;
-                                    final DocumentSnapshot documentSnapshot1 =
-                                        streamSnapshot.data!.docs[index];
-                                    final Text Countryimg =
-                                        Text(documentSnapshot1['img']);
-                                    return FutureBuilder(
-                                        future: storage.downloadURL(
-                                            Countryimg.data.toString()),
-                                        builder: (BuildContext context,
-                                            AsyncSnapshot<String> snapshot) {
-                                          if (snapshot.connectionState ==
-                                                  ConnectionState.done &&
-                                              snapshot.hasData) {
-                                            return Image.network(
-                                              snapshot.data!,
-                                              width: 140,
-                                              height: 105,
-                                              fit: BoxFit.cover,
-                                            );
-                                          }
+                                    return Container(
+                                        width: 140,
+                                        height: 100,
+                                        child: ListView.builder(
+                                            //var userDocument = streamSnapshot.data;
+                                            itemCount: streamSnapshot
+                                                .data!.docs.length,
+                                            itemBuilder: (context, index) {
+                                              final DocumentSnapshot
+                                                  documentSnapshot1 =
+                                                  streamSnapshot
+                                                      .data!.docs[index];
+                                              final Text Countryimg = Text(
+                                                  documentSnapshot1['img']);
+                                              return FutureBuilder(
+                                                  future: storage.downloadURL(
+                                                      Countryimg.data
+                                                          .toString()),
+                                                  builder:
+                                                      (BuildContext context,
+                                                          AsyncSnapshot<String>
+                                                              snapshot) {
+                                                    if (snapshot.connectionState ==
+                                                            ConnectionState
+                                                                .done &&
+                                                        snapshot.hasData) {
+                                                      return Image.network(
+                                                        snapshot.data!,
+                                                        width: 140,
+                                                        height: 100,
+                                                        fit: BoxFit.cover,
+                                                      );
+                                                    }
 
-                                          return Container();
-                                        });
+                                                    return Container();
+                                                  });
+                                            }));
                                   })),
                         ],
                       ),
                     ),
                   );
-
-                  return Text("ok");
                 },
               );
             }

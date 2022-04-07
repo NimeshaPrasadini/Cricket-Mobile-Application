@@ -1,3 +1,7 @@
+import 'package:cricketapp/pages/Admin/sheduleMenuAdmin.dart';
+import 'package:cricketapp/pages/Sample.dart';
+import 'package:cricketapp/pages/shedule.dart';
+import 'package:cricketapp/pages/sheduleMenu.dart';
 import 'package:cricketapp/pages/teamView.dart';
 import 'package:cricketapp/pages/commentView.dart';
 //import 'package:cricketapp/pages/newsView.dart';
@@ -25,6 +29,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
+
       appBar: AppBar(
         leading: const Icon(
           Icons.menu,
@@ -41,6 +46,7 @@ class _HomePageState extends State<HomePage> {
         centerTitle: true,
         backgroundColor: Theme.of(context).primaryColor,
       ),
+
       body: pages[pageIndex],
       bottomNavigationBar: buildMyNavBar(context),
     );
@@ -50,7 +56,7 @@ class _HomePageState extends State<HomePage> {
     return Container(
       height: 60,
       decoration: BoxDecoration(
-        color: Theme.of(context).primaryColor,
+        color: Color.fromARGB(255, 110, 163, 255),
         borderRadius: const BorderRadius.only(
           topLeft: Radius.circular(20),
           topRight: Radius.circular(20),
@@ -87,12 +93,17 @@ class _HomePageState extends State<HomePage> {
             },
             icon: pageIndex == 1
                 ? const Icon(
-                    Icons.sports_cricket_rounded,
+
+                    Icons.flag_outlined,
+
                     color: Colors.white,
                     size: 35,
                   )
                 : const Icon(
+
+
                     Icons.sports_cricket_outlined,
+
                     color: Colors.white,
                     size: 35,
                   ),
@@ -195,8 +206,9 @@ class Page3 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    //return NewsView();
-    return Container();
+
+    return SheduleMenu();
+
   }
 }
 
@@ -205,7 +217,7 @@ class Page4 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return MyHomePage();
   }
 }
 

@@ -16,6 +16,7 @@ class _TeamAddState extends State<TeamAdd> {
   var fileName;
   var path;
   var Collection = 'Teams';
+
   final Storage storage = Storage();
   final TextEditingController _countrynameController = TextEditingController();
   final TextEditingController _countryImageController = TextEditingController();
@@ -29,6 +30,7 @@ class _TeamAddState extends State<TeamAdd> {
   // If documentSnapshot != null then update an existing product
   Future<void> _createOrUpdate([DocumentSnapshot? documentSnapshot1]) async {
     String action = 'create';
+    bool _validate = false;
     if (documentSnapshot1 != null) {
       action = 'update';
       _countrynameController.text = documentSnapshot1['countryName'];
@@ -53,7 +55,10 @@ class _TeamAddState extends State<TeamAdd> {
               children: [
                 TextField(
                   controller: _countrynameController,
-                  decoration: const InputDecoration(labelText: 'CountryName'),
+                  decoration: InputDecoration(
+                    labelText: 'CountryName',
+                    errorText: _validate ? 'Value Can\'t Be Empty' : null,
+                  ),
                 ),
                 ElevatedButton(
                     onPressed: () async {
@@ -78,11 +83,17 @@ class _TeamAddState extends State<TeamAdd> {
                     child: const Icon(Icons.camera_alt)),
                 TextField(
                   controller: _countryImageController,
-                  decoration: const InputDecoration(labelText: 'img'),
+                  decoration: InputDecoration(
+                    labelText: 'Image',
+                    errorText: _validate ? 'Value Can\'t Be Empty' : null,
+                  ),
                 ),
                 TextField(
                   controller: _countryDesController,
-                  decoration: const InputDecoration(labelText: 'Details'),
+                  decoration: InputDecoration(
+                    labelText: 'Details',
+                    errorText: _validate ? 'Value Can\'t Be Empty' : null,
+                  ),
                 ),
                 /* TextField(
                   keyboardType:
@@ -95,48 +106,78 @@ class _TeamAddState extends State<TeamAdd> {
                 const SizedBox(
                   height: 20,
                 ),
-                ElevatedButton(
-                  child: Text(action == 'create' ? 'Create' : 'Update'),
-                  onPressed: () async {
-                    final String? countryName = _countrynameController.text;
-                    _countryImageController.text = fileName.toString();
-                    final String? countryImage = _countryImageController.text;
-                    final String? countryDes = _countryDesController.text;
-                    // final double? price =
-                    //  double.tryParse(_priceController.text);
-                    if (countryName != null) {
-                      if (action == 'create') {
-                        // Persist a new product to Firestore
-                        await _teamss.add({
-                          "countryName": countryName,
-                          "img": countryImage,
-                          "Detail": countryDes
-                        });
-                      }
+                Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      ElevatedButton(
+                        child: Text(action == 'create' ? 'Create' : 'Update'),
+                        onPressed: () async {
+                          setState(() {
+                            _countrynameController.text.isEmpty
+                                ? _validate = true
+                                : _validate = false;
+                            _countryImageController.text.isEmpty
+                                ? _validate = true
+                                : _validate = false;
+                            _countryDesController.text.isEmpty
+                                ? _validate = true
+                                : _validate = false;
+                          });
 
-                      if (action == 'update') {
-                        // Update the product
-                        await _teamss.doc(documentSnapshot1!.id).update({
-                          "countryName": countryName,
-                          "img": countryImage,
-                          "Detail": countryDes
-                        });
-                      }
-                      storage
-                          .uploadImage(path, fileName)
-                          .then((value) => print('done'));
+                          final String? countryName =
+                              _countrynameController.text;
+                          _countryImageController.text = fileName.toString();
+                          final String? countryImage =
+                              _countryImageController.text;
+                          final String? countryDes = _countryDesController.text;
+                          // final double? price =
+                          //  double.tryParse(_priceController.text);
+                          if (countryName == ' ' ||
+                              countryImage == null ||
+                              countryDes == ' ') {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                    content:
+                                        Text('All fields must be filled')));
+                          } else {
+                            if (countryName != null) {
+                              if (action == 'create') {
+                                // Persist a new product to Firestore
+                                await _teamss.add({
+                                  "countryName": countryName,
+                                  "img": countryImage,
+                                  "Detail": countryDes
+                                });
+                              }
 
-                      // Clear the text fields
-                      _countrynameController.text = '';
-                      _countryImageController.text = '';
-                      _countryDesController.text = '';
-                      // _priceController.text = '';
+                              if (action == 'update') {
+                                // Update the product
+                                await _teamss
+                                    .doc(documentSnapshot1!.id)
+                                    .update({
+                                  "countryName": countryName,
+                                  "img": countryImage,
+                                  "Detail": countryDes
+                                });
+                              }
+                              storage
+                                  .uploadImage(path, fileName)
+                                  .then((value) => print('done'));
 
-                      // Hide the bottom sheet
-                      Navigator.of(context).pop();
-                    }
-                  },
-                )
+                              // Clear the text fields
+                              _countrynameController.text = '';
+                              _countryImageController.text = '';
+                              _countryDesController.text = '';
+                              // _priceController.text = '';
+
+                              // Hide the bottom sheet
+                              Navigator.of(context).pop();
+                            }
+                          }
+                        },
+                      )
+                    ]),
               ],
             ),
           );
