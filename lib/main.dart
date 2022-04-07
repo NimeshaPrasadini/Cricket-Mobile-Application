@@ -26,7 +26,6 @@ class CricketApp extends StatelessWidget {
       ),
       home: Splash1(),
 
-      //const Authentication(),
     );
   }
 }

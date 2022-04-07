@@ -1,6 +1,6 @@
 import 'package:cricketapp/pages/teamView.dart';
 import 'package:cricketapp/pages/commentView.dart';
-//import 'package:cricketapp/pages/newsView.dart';
+import 'package:cricketapp/pages/newsView.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatefulWidget {
@@ -163,22 +163,12 @@ class _HomePageState extends State<HomePage> {
 class Page1 extends StatelessWidget {
   const Page1({Key? key}) : super(key: key);
 
-  @override
+ @override
   Widget build(BuildContext context) {
-    return Container(
-      color: Colors.white,
-      child: Center(
-        child: Text(
-          "Page Number 1",
-          style: TextStyle(
-            color: Colors.blue[900],
-            fontSize: 45,
-            fontWeight: FontWeight.w500,
-          ),
-        ),
-      ),
-    );
+    return NewsView();
+    
   }
+
 }
 
 class Page2 extends StatelessWidget {
@@ -195,7 +185,6 @@ class Page3 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    //return NewsView();
     return Container();
   }
 }

@@ -6,8 +6,8 @@ class CommentView extends StatelessWidget {
   CommentView({Key? key}) : super(key: key);
 
   //final CollectionReference _comments =
-      //FirebaseFirestore.instance.collection('comments');
-    final db = FirebaseFirestore.instance;
+  //FirebaseFirestore.instance.collection('comments');
+  final db = FirebaseFirestore.instance;
 
   @override
   Widget build(BuildContext context) {
@@ -25,13 +25,13 @@ class CommentView extends StatelessWidget {
           } else
             return ListView(
               children: snapshot.data!.docs.map((doc) {
-                //final Text name = Text(doc.data()['userName']);
-                //final Text message = Text(documentSnapshot2['message']);
+                final Text message =
+                            Text((doc.data() as dynamic)['message']);
                 //final Text time = Text(documentSnapshot2['time']);
                 return Card(
                   child: ListTile(
-                    title: Text((doc.data() as dynamic)['message']),
-                    //subtitle: Text((doc.data() as dynamic)['name']),
+                    title: message,
+                    subtitle: Text((doc.data() as dynamic)['name']),
                     //: Text((doc.data() as dynamic)['time']),
                   ),
                 );
@@ -61,11 +61,13 @@ class FeedbackDialog extends StatefulWidget {
 
 class _FeedbackDialogState extends State<FeedbackDialog> {
   final TextEditingController _controller = TextEditingController();
+  final TextEditingController _usernamecontroller = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey();
 
   @override
   void dispose() {
     _controller.dispose();
+    _usernamecontroller.dispose();
     super.dispose();
   }
 
@@ -74,25 +76,23 @@ class _FeedbackDialogState extends State<FeedbackDialog> {
     return AlertDialog(
       content: Form(
         key: _formKey,
-        child: 
-          //children: <Widget>[
-            // TextFormField(
-            //   controller: _controller,
-            //   keyboardType: TextInputType.name,
-            //   decoration: const InputDecoration(
-            //     hintText: 'Enter your name here',
-            //     filled: true,
-            //   ),
-            //   // maxLines: 5,
-            //   maxLength: 4096,
-            //   textInputAction: TextInputAction.done,
-            //   validator: (String? text) {
-            //     if (text == null || text.isEmpty) {
-            //       return 'Please enter a value';
-            //     }
-            //     return null;
-            //   },
-            // ),
+        child: Column(
+          children: <Widget>[
+            TextFormField(
+              controller: _usernamecontroller,
+              keyboardType: TextInputType.name,
+              decoration: const InputDecoration(
+                hintText: 'Enter user name here',
+                filled: true,
+              ),
+              textInputAction: TextInputAction.done,
+              validator: (String? text) {
+                if (text == null || text.isEmpty) {
+                  return 'Please enter a value';
+                }
+                return null;
+              },
+            ),
             TextFormField(
               controller: _controller,
               keyboardType: TextInputType.multiline,
@@ -109,8 +109,8 @@ class _FeedbackDialogState extends State<FeedbackDialog> {
                 }
                 return null;
               },
-            //),
-          //],
+            ),
+          ],
         ),
       ),
       actions: [
@@ -128,13 +128,14 @@ class _FeedbackDialogState extends State<FeedbackDialog> {
               String message;
 
               try {
-                // Get a reference to the `feedback` collection
+                // Get a reference to the `comment` collection
                 final collection =
                     FirebaseFirestore.instance.collection('comments');
 
-                // Write the server's timestamp and the user's feedback
+                // Write the user's comment
                 await collection.doc().set({
                   'message': _controller.text,
+                  'user': _usernamecontroller.text,
                   'time': FieldValue.serverTimestamp(),
                 });
 
@@ -154,4 +155,3 @@ class _FeedbackDialogState extends State<FeedbackDialog> {
     );
   }
 }
-
