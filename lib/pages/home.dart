@@ -1,4 +1,6 @@
 import 'package:cricketapp/pages/teamView.dart';
+import 'package:cricketapp/pages/commentView.dart';
+//import 'package:cricketapp/pages/newsView.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatefulWidget {
@@ -16,6 +18,7 @@ class _HomePageState extends State<HomePage> {
     const Page2(),
     const Page3(),
     const Page4(),
+    const Page5(),
   ];
 
   @override
@@ -28,7 +31,7 @@ class _HomePageState extends State<HomePage> {
           color: Colors.white,
         ),
         title: const Text(
-          "Cricket App",
+          "Cric Info",
           style: TextStyle(
             color: Colors.white,
             fontSize: 25,
@@ -84,12 +87,12 @@ class _HomePageState extends State<HomePage> {
             },
             icon: pageIndex == 1
                 ? const Icon(
-                    Icons.work_rounded,
+                    Icons.sports_cricket_rounded,
                     color: Colors.white,
                     size: 35,
                   )
                 : const Icon(
-                    Icons.work_outline_outlined,
+                    Icons.sports_cricket_outlined,
                     color: Colors.white,
                     size: 35,
                   ),
@@ -122,12 +125,31 @@ class _HomePageState extends State<HomePage> {
             },
             icon: pageIndex == 3
                 ? const Icon(
-                    Icons.person,
+                    Icons.schedule,
                     color: Colors.white,
                     size: 35,
                   )
                 : const Icon(
-                    Icons.person_outline,
+                    Icons.schedule_outlined,
+                    color: Colors.white,
+                    size: 35,
+                  ),
+          ),
+          IconButton(
+            enableFeedback: false,
+            onPressed: () {
+              setState(() {
+                pageIndex = 4;
+              });
+            },
+            icon: pageIndex == 4
+                ? const Icon(
+                    Icons.comment_rounded,
+                    color: Colors.white,
+                    size: 35,
+                  )
+                : const Icon(
+                    Icons.comment_outlined,
                     color: Colors.white,
                     size: 35,
                   ),
@@ -173,19 +195,8 @@ class Page3 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: Colors.white,
-      child: Center(
-        child: Text(
-          "Page Number 3",
-          style: TextStyle(
-            color: Colors.blue[900],
-            fontSize: 45,
-            fontWeight: FontWeight.w500,
-          ),
-        ),
-      ),
-    );
+    //return NewsView();
+    return Container();
   }
 }
 
@@ -195,5 +206,14 @@ class Page4 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container();
+  }
+}
+
+class Page5 extends StatelessWidget {
+  const Page5({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return CommentView();
   }
 }
