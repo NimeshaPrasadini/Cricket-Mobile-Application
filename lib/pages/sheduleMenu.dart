@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
-import '../model/homelist.dart';
+
+import '../model/sheduleUser.dart';
 import 'design/app_theme.dart';
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({Key? key}) : super(key: key);
+class SheduleMenu extends StatefulWidget {
+  const SheduleMenu({Key? key}) : super(key: key);
 
   @override
-  _MyHomePageState createState() => _MyHomePageState();
+  _SheduleMenu createState() => _SheduleMenu();
 }
 
-class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
-  List<HomeList> homeList = HomeList.homeList;
+class _SheduleMenu extends State<SheduleMenu> with TickerProviderStateMixin {
+  List<SheduleUser> homeList = SheduleUser.sheduleUser;
   AnimationController? animationController;
   bool multiple = true;
 
@@ -130,7 +131,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
               child: Padding(
                 padding: const EdgeInsets.only(top: 4),
                 child: Text(
-                  'Cric Info',
+                  'Shedule Management',
                   style: TextStyle(
                     fontSize: 22,
                     color: AppTheme.darkText,
@@ -179,7 +180,7 @@ class HomeListView extends StatelessWidget {
       this.animation})
       : super(key: key);
 
-  final HomeList? listData;
+  final SheduleUser? listData;
   final VoidCallback? callBack;
   final AnimationController? animationController;
   final Animation<double>? animation;

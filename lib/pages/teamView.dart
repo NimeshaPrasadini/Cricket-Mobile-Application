@@ -5,6 +5,7 @@ import 'package:cricketapp/pages/teamPage.dart';
 import 'package:flutter/material.dart';
 
 import '../service/storage_service.dart';
+import 'design/app_theme.dart';
 
 class TeamView extends StatefulWidget {
   const TeamView({Key? key}) : super(key: key);
@@ -14,6 +15,7 @@ class TeamView extends StatefulWidget {
 }
 
 class _TeamView extends State<TeamView> {
+  bool multiple = true;
   var fileName;
   var path;
   var Collection = 'Teams';
@@ -28,7 +30,16 @@ class _TeamView extends State<TeamView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Countries'),
+        backgroundColor: Colors.white,
+        foregroundColor: AppTheme.darkText,
+        title: const Text(
+          'Countries',
+          style: TextStyle(
+            fontSize: 22,
+            color: AppTheme.darkText,
+            fontWeight: FontWeight.w700,
+          ),
+        ),
         actions: [
           IconButton(
               icon: Icon(Icons.person_outlined),
@@ -48,9 +59,20 @@ class _TeamView extends State<TeamView> {
               itemBuilder: (context, index) {
                 final DocumentSnapshot documentSnapshot1 =
                     streamSnapshot.data!.docs[index];
-                final Text name = Text(documentSnapshot1['countryName']);
+                final Text name = Text(
+                  documentSnapshot1['countryName'],
+                  style: TextStyle(
+                    fontSize: 20,
+                    color: AppTheme.darkText,
+                    fontWeight: FontWeight.w400,
+                  ),
+                );
                 final Text img = Text(documentSnapshot1['img']);
                 return Card(
+                    borderOnForeground: true,
+
+                    // Colors.cyanAccent,
+                    color: Color.fromARGB(255, 255, 255, 255),
                     elevation: 7,
                     child: Column(
                       children: [

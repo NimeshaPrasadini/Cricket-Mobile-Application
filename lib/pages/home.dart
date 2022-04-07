@@ -1,3 +1,7 @@
+import 'package:cricketapp/pages/Admin/sheduleMenuAdmin.dart';
+import 'package:cricketapp/pages/Sample.dart';
+import 'package:cricketapp/pages/shedule.dart';
+import 'package:cricketapp/pages/sheduleMenu.dart';
 import 'package:cricketapp/pages/teamView.dart';
 import 'package:flutter/material.dart';
 
@@ -22,22 +26,6 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBar(
-        leading: const Icon(
-          Icons.menu,
-          color: Colors.white,
-        ),
-        title: const Text(
-          "Cricket App",
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 25,
-            fontWeight: FontWeight.w600,
-          ),
-        ),
-        centerTitle: true,
-        backgroundColor: Theme.of(context).primaryColor,
-      ),
       body: pages[pageIndex],
       bottomNavigationBar: buildMyNavBar(context),
     );
@@ -47,7 +35,7 @@ class _HomePageState extends State<HomePage> {
     return Container(
       height: 60,
       decoration: BoxDecoration(
-        color: Theme.of(context).primaryColor,
+        color: Color.fromARGB(255, 110, 163, 255),
         borderRadius: const BorderRadius.only(
           topLeft: Radius.circular(20),
           topRight: Radius.circular(20),
@@ -84,12 +72,12 @@ class _HomePageState extends State<HomePage> {
             },
             icon: pageIndex == 1
                 ? const Icon(
-                    Icons.work_rounded,
+                    Icons.flag_outlined,
                     color: Colors.white,
                     size: 35,
                   )
                 : const Icon(
-                    Icons.work_outline_outlined,
+                    Icons.flag_outlined,
                     color: Colors.white,
                     size: 35,
                   ),
@@ -173,19 +161,7 @@ class Page3 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: Colors.white,
-      child: Center(
-        child: Text(
-          "Page Number 3",
-          style: TextStyle(
-            color: Colors.blue[900],
-            fontSize: 45,
-            fontWeight: FontWeight.w500,
-          ),
-        ),
-      ),
-    );
+    return SheduleMenu();
   }
 }
 
@@ -194,6 +170,6 @@ class Page4 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return MyHomePage();
   }
 }
