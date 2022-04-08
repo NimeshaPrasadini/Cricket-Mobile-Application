@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 
 import '../service/storage_service.dart';
+import 'design/app_theme.dart';
 
 class TeamPage extends StatefulWidget {
   final Text name;
@@ -83,7 +84,14 @@ class _TeamPageState extends State<TeamPage> {
                                   elevation: 7,
                                   margin: const EdgeInsets.all(10),
                                   child: ListTile(
-                                    title: Text(documentSnapshot1['Detail']),
+                                    title: Text(
+                                      documentSnapshot1['Detail'],
+                                      style: TextStyle(
+                                        fontSize: 14,
+                                        color: AppTheme.darkText,
+                                        fontWeight: FontWeight.w400,
+                                      ),
+                                    ),
                                   ),
                                 ),
                               ]),

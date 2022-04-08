@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 import '../service/storage_service.dart';
+import 'design/app_theme.dart';
 
 class Player extends StatefulWidget {
   final Text plname;
@@ -63,7 +64,14 @@ class _PlayerState extends State<Player> {
                         elevation: 7,
                         margin: const EdgeInsets.all(10),
                         child: ListTile(
-                          title: Text(documentSnapshot3['Description']),
+                          title: Text(
+                            documentSnapshot3['Description'],
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: AppTheme.darkText,
+                              fontWeight: FontWeight.w400,
+                            ),
+                          ),
                         ),
                       ),
                     ])),
