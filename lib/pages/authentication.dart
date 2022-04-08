@@ -28,7 +28,10 @@ class _AuthenticationState extends State<Authentication> {
           children: [
             TextFormField(
               controller: _emailField,
-              decoration: InputDecoration(
+              style: const TextStyle(
+                  color: Colors.white,
+              ),
+              decoration: const InputDecoration(
                 hintText: "example@email.com",
                 hintStyle: TextStyle(
                   color: Colors.white,
@@ -36,13 +39,16 @@ class _AuthenticationState extends State<Authentication> {
                 labelText: "Email",
                 labelStyle: TextStyle(
                   color: Colors.white,
-                ),
+                ),        
               ),
             ),
             TextFormField(
               controller: _passwordField,
+              style: const TextStyle(
+                  color: Colors.white,
+              ),
               obscureText: true,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 hintText: "password",
                 hintStyle: TextStyle(
                   color: Colors.white,
@@ -53,7 +59,7 @@ class _AuthenticationState extends State<Authentication> {
                 ),
               ),
             ),
-            SizedBox(height: 40),
+            const SizedBox(height: 40),
             Container(
               width: MediaQuery.of(context).size.width / 1.4,
               height: 45,
@@ -77,7 +83,7 @@ class _AuthenticationState extends State<Authentication> {
                 child: Text("Register"),
               ),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             Container(
               width: MediaQuery.of(context).size.width / 1.4,
               height: 45,
@@ -98,7 +104,7 @@ class _AuthenticationState extends State<Authentication> {
                       );
                     }
                   },
-                  child: Text("Login"),
+                  child: const Text("Login"),
               ),
             ),
           ],
