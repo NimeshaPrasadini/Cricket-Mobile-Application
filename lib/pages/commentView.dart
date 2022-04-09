@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:date_format/date_format.dart';
 //import 'package:flutter/foundation.dart';
 import 'dart:io';
 
@@ -78,14 +79,14 @@ class _CommentViewState extends State<CommentView> {
                     if (message != null && userName != null) {
                       if (action == 'create') {
                         // Persist a new comment to Firestore
-                        await _newss.add({"message": message, "userName": userName});
+                        await _newss.add({"message": message, "userName": userName, "time": FieldValue.serverTimestamp()});
                       }
 
                       if (action == 'update') {
                         // Update the comment
                         await _newss
                             .doc(documentSnapshot!.id)
-                            .update({"message": message, "userName": userName});
+                            .update({"message": message, "userName": userName, "time": FieldValue.serverTimestamp()});
                       }
 
                       // Clear the text fields
@@ -128,6 +129,9 @@ class _CommentViewState extends State<CommentView> {
               itemBuilder: (context, index) {
                 final DocumentSnapshot documentSnapshot =
                     streamSnapshot.data!.docs[index];
+                final Timestamp timestamp = documentSnapshot['time'] as Timestamp;
+                final DateTime dateTime = timestamp.toDate();
+                final String dateString = dateTime.toString();
                 bool isFavourite = true;
                 return Card(
                   margin: const EdgeInsets.all(10),
@@ -140,7 +144,7 @@ class _CommentViewState extends State<CommentView> {
                         color: Colors.white,
                       ),
                     ),
-                    subtitle: Text(documentSnapshot['userName']),
+                    subtitle: Text(documentSnapshot['userName'] + '  \n' + dateString),
                     title: Text(documentSnapshot['message']),
                     trailing: SizedBox(
                       width: 100,
@@ -158,8 +162,8 @@ class _CommentViewState extends State<CommentView> {
                           //         _deleteNews(documentSnapshot.id)),                     
                           IconButton(
                             icon: Icon(
-                              Icons.favorite,
-                              color: isFavourite ? Colors.blueGrey : Colors.grey
+                              Icons.favorite_border,
+                              color: isFavourite ? Colors.grey : Colors.blueGrey
                             ),
                             onPressed: ()
                             {
